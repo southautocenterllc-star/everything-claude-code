@@ -1,0 +1,19 @@
+{
+  "symbol": "XAU/USD",
+  "setup": "CORTO con tendencia H4 (2026-06-04) — objetivo 4450/4400",
+  "buffer": 3.0,
+  "levels": [
+    {"name": "venta_pullback", "type": "zone", "lo": 4485, "hi": 4500,
+     "emoji": "🔴", "msg": "ZONA DE VENTA (pullback a EMA20/50 H1). Vendé el rebote. Stop 4520."},
+    {"name": "venta_quiebre", "type": "below", "price": 4445,
+     "emoji": "🔴", "msg": "ROMPIÓ 4445 — VENTA en quiebre del piso. Stop 4475. Objetivo 4420/4400."},
+    {"name": "objetivo_1", "type": "below", "price": 4450,
+     "emoji": "🎯", "msg": "Tocó OBJETIVO 1 (4450). Asegurá ganancia / movés stop."},
+    {"name": "objetivo_2", "type": "below", "price": 4420,
+     "emoji": "🎯", "msg": "Tocó OBJETIVO 2 (4420)."},
+    {"name": "objetivo_3", "type": "below", "price": 4400,
+     "emoji": "🎯", "msg": "Tocó OBJETIVO 3 (4400). Corrida completa."},
+    {"name": "invalidacion", "type": "above", "price": 4522,
+     "emoji": "⚠️", "msg": "INVALIDACIÓN: precio sobre 4522. El corto se cancela, tendencia se dio vuelta. Afuera."}
+  ]
+}

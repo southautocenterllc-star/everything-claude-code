@@ -1,0 +1,45 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "LS",
+      "WebSearch",
+      "TodoWrite",
+      "Edit",
+      "Write",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git branch:*)",
+      "Bash(git show:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git ls-files:*)",
+      "Bash(systemctl --user status aureo-*)",
+      "Bash(systemctl --user restart aureo-*)",
+      "Bash(systemctl --user daemon-reload)",
+      "Bash(journalctl --user -u aureo-*)",
+      "Bash(.venv/bin/python:*)",
+      "Bash(.venv/bin/python -m:*)",
+      "Bash(curl 127.0.0.1:8080/*)",
+      "Bash(curl http://127.0.0.1:8080/*)",
+      "Bash(curl https://api.telegram.org:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:api.telegram.org)"
+    ],
+    "deny": [
+      "Bash(rm:*)",
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Read(/mnt/datos/holding/wall-e/**)",
+      "Read(/mnt/datos/holding/carlitos/**)",
+      "Read(/mnt/datos/holding/flowtive/**)",
+      "Read(/mnt/datos/holding/nexus-stack/**)",
+      "Read(/home/andres-urquijo-personal/Documents/Codex/**)",
+      "Read(./.env)"
+    ]
+  }
+}
