@@ -1,0 +1,116 @@
+# ÁUREO — configuración central
+# Este archivo es la fuente de verdad para todos los parámetros operativos.
+# Los secretos (tokens, passwords, API keys) van SOLO en .env, nunca acá.
+
+# ── Trading ────────────────────────────────────────────────────────────────────
+trading:
+  symbol: "XAUUSD"
+  magic: 770311                    # Número mágico de las órdenes de ÁUREO en MT5
+  risk_pct: 0.01                   # Riesgo por trade: 1 % del equity
+  max_daily_loss_pct: 0.03         # Límite diario de pérdida: 3 % del equity
+  lot_step: 0.01                   # Mínima fracción de lote (XAUUSD estándar)
+  lot_min: 0.01                    # Lote mínimo permitido
+  lot_max: 0.10                    # Lote máximo permitido (prudencia en demo)
+  oz_per_lot: 100                  # 1 lote estándar = 100 onzas de oro
+  pyramiding: 0                    # Posiciones simultáneas permitidas (0 = solo 1)
+
+# ── Estrategia: preset 'balanced' (research 2026-05-19) ───────────────────────
+# NO tiene edge validado con el gauntlet. Solo sirve para operar la demo y
+# acumular datos de aprendizaje mientras se busca edge real.
+strategy:
+  balanced:
+    ema_fast: 20
+    ema_mid: 50
+    ema_slow: 200
+    rsi_period: 14
+    atr_period: 14
+    rsi_long_min: 30.0
+    rsi_long_max: 75.0
+    rsi_short_min: 30.0
+    rsi_short_max: 55.0
+    atr_sl_mult: 1.2
+    atr_tp1_mult: 3.0
+    atr_tp2_mult: 6.0
+
+  # Preset demo: TP cortos para cerrar trades rápido → más datos de aprendizaje
+  demo:
+    ema_fast: 20
+    ema_mid: 50
+    ema_slow: 200
+    rsi_period: 14
+    atr_period: 14
+    rsi_long_min: 30.0
+    rsi_long_max: 75.0
+    rsi_short_min: 30.0
+    rsi_short_max: 55.0
+    atr_sl_mult: 1.0
+    atr_tp1_mult: 1.5
+    atr_tp2_mult: 3.0
+
+# ── Feed de datos ─────────────────────────────────────────────────────────────
+feed:
+  primary: "twelvedata"            # Fuente primaria (requiere TWELVEDATA_API_KEY)
+  fallback: "yahoo"                # Fallback gratuito (GC=F en Yahoo Finance)
+  yahoo_symbol: "GC=F"
+  twelvedata_symbol: "XAU/USD"
+  lookback_bars: 1000              # Barras H1 a descargar por defecto
+  timeout_sec: 30
+
+# ── Backtest ──────────────────────────────────────────────────────────────────
+backtest:
+  # Costos realistas para XAU/USD swing H1.
+  # OJO con el footgun: spread_pips × pip_value = costo USD/oz
+  # pip_value = 0.01 USD/oz → spread_pips=35 → 0.35 USD/oz por lado (0.70 round trip)
+  spread_pips: 35                  # 35 pips = 0.35 USD/oz spread (real del broker)
+  pip_value: 0.01                  # 1 pip = 0.01 USD/oz para XAUUSD
+  swap_per_night: 0.5              # 0.50 USD/oz por noche (costo DOMINANTE en swing)
+  initial_equity: 10000.0          # Equity de referencia para métricas de %
+
+# ── Research / Gauntlet ───────────────────────────────────────────────────────
+research:
+  # Filtro 1 — Costos (mismos que backtest)
+  gauntlet_spread_pips: 35
+  gauntlet_swap_per_night: 0.5
+
+  # Filtro 2 — Significancia (circular-shift permutation, no t-stat)
+  permutation_iters: 5000
+  permutation_alpha: 0.05
+  permutation_min_n: 30
+
+  # Filtro 3 — Robustez por régimen
+  regime_blocks: 5                 # Bloques macro 2008→2026
+  regime_min_profitable: 3        # ≥3 de 5 bloques deben ser positivos
+  regime_max_concentration: 0.60  # < 60% del PnL en un solo régimen
+
+  forward_horizons: [5, 10, 20]    # Horizontes en días para el event study
+
+# ── Análisis / Patterns ───────────────────────────────────────────────────────
+analysis:
+  breakout_window: 20              # Ventana en barras para calcular prior high/low
+  rsi_oversold: 30
+  rsi_overbought: 70
+  event_study_window: 5            # Días ±5 para el event study macro
+
+# ── Demo (cuenta de aprendizaje) ─────────────────────────────────────────────
+demo:
+  initial_balance: 1000.0          # Balance inicial de la cuenta demo ($)
+  volume: 0.01                     # Lote fijo en la demo (mínimo MT5 = 0.01)
+  breakeven_trigger_mult: 1.0      # Mover SL a BE cuando profit ≥ 1.0 × ATR
+  setup_label: "demo_auto_balanced"
+
+# ── Notificaciones ────────────────────────────────────────────────────────────
+notifications:
+  heartbeat_max_min: 90            # Máx minutos sin latido antes de alertar
+  healthcheck_poll_sec: 900        # Cada 15 min el vigía revisa
+  price_watch_poll_sec: 60         # Vigía de niveles: cada minuto
+  price_watch_buffer: 3.0          # USD de buffer para re-armar una alerta de nivel
+
+# ── Servicios systemd ─────────────────────────────────────────────────────────
+services:
+  - aureo-mt5-terminal
+  - aureo-demo-trader
+  - aureo-bot
+  - aureo-price-watch
+  - aureo-study
+  timers:
+  - aureo-market-study.timer
