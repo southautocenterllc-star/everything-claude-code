@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.bak*
+.env.*
+logs/
+data/
+*.db
+*.sqlite*
+
+# outputs generados (regenerables) y logs de corridas
+*.log
+reports/
+research/output/
+analysis/patterns/output/
