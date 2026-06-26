@@ -1,0 +1,15 @@
+[Unit]
+# Dispara aureo-healthcheck.service cada 15 min durante el demo. Habilitar con:
+#   systemctl --user enable --now aureo-healthcheck.timer
+# (lo habilita Andrés.)
+Description=AUREO healthcheck cada 15 min
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+# tolerancia contra la DNS-race en el arranque (igual que los demás units)
+AccuracySec=30s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

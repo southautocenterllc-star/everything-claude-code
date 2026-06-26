@@ -1,0 +1,17 @@
+[Unit]
+# ÁUREO — vigía de precios del oro. Alerta al Telegram al tocar cada nivel de
+# config/price_levels.json. Determinístico, sin Claude en el bucle.
+Description=AUREO vigia de precios del oro (alertas Telegram)
+After=nss-lookup.target network-online.target
+Wants=network-online.target nss-lookup.target
+
+[Service]
+Type=simple
+WorkingDirectory=/mnt/datos/holding/aureo
+ExecStart=/mnt/datos/holding/aureo/.venv/bin/python -m analysis.price_watch --daemon --poll 180
+Environment=PYTHONUNBUFFERED=1
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target

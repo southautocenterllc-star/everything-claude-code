@@ -1,0 +1,23 @@
+[Unit]
+# AUREO signal_loop en MODO PAPEL — evalúa el último cierre H1 y registra al
+# journal local. NO postea al webhook (AUREO_LIVE no se setea). Determinístico,
+# sin Claude en el bucle. Lo dispara el timer .timer, no se queda residente.
+Description=AUREO signal loop (paper, one-shot)
+After=nss-lookup.target network-online.target
+Wants=nss-lookup.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/holding/aureo
+# Ojo: ajustar la ruta si el repo no está en ~/holding/aureo
+ExecStart=%h/holding/aureo/.venv/bin/python -m core.signal_loop --once
+# Modo papel explícito: AUREO_LIVE ausente = nunca postea.
+Environment=PYTHONUNBUFFERED=1
+# Si algún día hay edge validado y se quiere ir en vivo, agregar acá:
+#   Environment=AUREO_LIVE=1
+#   Environment=AUREO_WEBHOOK_URL=https://aureo-edge.vercel.app/api/webhook
+#   Environment=WEBHOOK_SECRET=...   (mejor vía EnvironmentFile=%h/holding/aureo/.env)
+Nice=10
+
+[Install]
+WantedBy=default.target

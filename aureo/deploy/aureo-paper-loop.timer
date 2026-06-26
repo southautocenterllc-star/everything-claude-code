@@ -1,0 +1,13 @@
+[Unit]
+Description=AUREO paper signal loop — dispara unos minutos después de cada cierre H1
+After=nss-lookup.target
+
+[Timer]
+# Cada hora a :02 (deja cerrar la vela H1 + colchón para que el feed la publique).
+OnCalendar=*-*-* *:02:00
+Persistent=true
+# Si el equipo estuvo apagado, NO dispara ráfaga de corridas atrasadas:
+# el loop ya backfillea desde data en vivo en la próxima corrida normal.
+
+[Install]
+WantedBy=timers.target

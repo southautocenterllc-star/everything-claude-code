@@ -1,0 +1,14 @@
+[Unit]
+# Dispara aureo-bitacora.service semanal: domingo ~20:00. Habilitar con:
+#   systemctl --user enable --now aureo-bitacora.timer
+# (lo habilita Andrés.)
+Description=AUREO bitacora semanal (domingo ~20:00)
+
+[Timer]
+OnCalendar=Sun *-*-* 20:00:00
+# si el equipo estuvo apagado a esa hora, corre al volver
+Persistent=true
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

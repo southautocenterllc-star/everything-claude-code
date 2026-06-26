@@ -1,0 +1,13 @@
+[Unit]
+# ÁUREO — estudio constante del mercado del oro (macro + noticias RSS + eventos).
+# Determinístico, sin Claude en el bucle (anti-BENDER). Alerta al Telegram solo
+# cuando cambia el sesgo / hay blackout / titular crítico. Lo dispara el .timer.
+Description=AUREO estudio de mercado del oro (macro+noticias+eventos, deterministico)
+After=nss-lookup.target network-online.target
+Wants=network-online.target nss-lookup.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/mnt/datos/holding/aureo
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/mnt/datos/holding/aureo/.venv/bin/python -m analysis.market_study --once --send

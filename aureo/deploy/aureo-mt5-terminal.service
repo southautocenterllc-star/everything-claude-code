@@ -1,0 +1,18 @@
+[Unit]
+Description=AUREO MT5 terminal (Wine, display oculto Xvfb) persistente
+After=graphical-session.target nss-lookup.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/mnt/datos/holding/aureo
+Environment=WINEPREFIX=/mnt/datos/holding/aureo/data/mt5/wineprefix
+Environment=WINEDEBUG=-all
+ExecStart=/mnt/datos/holding/aureo/scripts/run_mt5_hidden.sh
+Restart=always
+RestartSec=30
+TimeoutStopSec=20
+KillMode=mixed
+
+[Install]
+WantedBy=default.target

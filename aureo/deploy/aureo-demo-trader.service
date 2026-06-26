@@ -1,0 +1,18 @@
+[Unit]
+Description=AUREO operador demo (auto-trade demo, determinístico)
+After=aureo-mt5-terminal.service nss-lookup.target network-online.target
+Wants=aureo-mt5-terminal.service network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/mnt/datos/holding/aureo
+Environment=PYTHONUNBUFFERED=1
+Environment=WINEPREFIX=/mnt/datos/holding/aureo/data/mt5/wineprefix
+Environment=WINEDEBUG=-all
+Environment=DISPLAY=:0
+ExecStart=/mnt/datos/holding/aureo/.venv/bin/python -m core.demo_trader --daemon --poll 300
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target

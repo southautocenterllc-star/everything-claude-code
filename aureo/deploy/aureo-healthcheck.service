@@ -1,0 +1,15 @@
+[Unit]
+# ÁUREO — healthcheck determinístico (vigía de servicios + feed + latido demo).
+# Sin Claude en el bucle (anti-BENDER). Solo LECTURA de estado; alerta al Telegram
+# si algo se rompe, con anti-spam y aviso de recuperación. Lo dispara el .timer.
+# Habilitar con (lo habilita Andrés):
+#   systemctl --user enable --now aureo-healthcheck.timer
+Description=AUREO healthcheck (vigia de servicios+feed+latido, deterministico)
+After=nss-lookup.target network-online.target
+Wants=network-online.target nss-lookup.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/mnt/datos/holding/aureo
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/mnt/datos/holding/aureo/.venv/bin/python -m analysis.healthcheck --once --send

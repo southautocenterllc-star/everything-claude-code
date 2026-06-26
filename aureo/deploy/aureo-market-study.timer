@@ -1,0 +1,15 @@
+[Unit]
+# Dispara aureo-market-study.service cada 4h. Habilitar con:
+#   systemctl --user enable --now aureo-market-study.timer
+# (lo habilita Andrés; el classifier bloquea auto-posters recurrentes.)
+Description=AUREO estudio de mercado del oro cada 4h
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=4h
+# tolerancia contra la DNS-race en el arranque (igual que los demás units)
+AccuracySec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

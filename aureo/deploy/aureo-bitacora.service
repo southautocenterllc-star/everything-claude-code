@@ -1,0 +1,15 @@
+[Unit]
+# ÁUREO — bitácora de período (reporte de cierre del demo, determinístico).
+# Sin Claude en el bucle (anti-BENDER). Lee el journal y postea el resumen semanal
+# al grupo TRADING. Lo dispara el .timer (corte semanal, domingo). Habilitar con:
+#   systemctl --user enable --now aureo-bitacora.timer
+# (lo habilita Andrés.)
+Description=AUREO bitacora de periodo (reporte demo, deterministico)
+After=nss-lookup.target network-online.target
+Wants=network-online.target nss-lookup.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/mnt/datos/holding/aureo
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/mnt/datos/holding/aureo/.venv/bin/python -m analysis.bitacora --once --send
